@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResponseService {
 
+    public <T> ResponseEntity<T> getResponse(T data) {
+        return getResponse(data, HttpStatus.OK);
+    }
+
     public <T> ResponseEntity<T> getResponse(T data, HttpStatus httpStatus) {
         return new ResponseEntity<>(data, httpStatus);
     }

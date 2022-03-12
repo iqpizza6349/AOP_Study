@@ -6,6 +6,8 @@ import com.example.aop_study.library.dto.BookRequestDto;
 import com.example.aop_study.library.dto.BookResponseDto;
 import com.example.aop_study.token.config.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,24 +65,52 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookResponseDto> findAllByTitle(String keyword) {
-        List<Book> books = bookRepository.findAllByTitleContains(keyword);
+    public List<BookResponseDto> findAllByTitle(String keyword, PageRequest pageRequest) {
+        List<Book> books = bookRepository.findAllByTitleContains(keyword, pageRequest);
         return books.stream().map(BookResponseDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookResponseDto> findAllByAuthor(String authorName) {
-        List<Book> books = bookRepository.findAllByAuthor(authorName);
+    public List<BookResponseDto> findAllByAuthor(String authorName, PageRequest pageRequest) {
+        List<Book> books = bookRepository.findAllByAuthorContains(authorName, pageRequest);
         return books.stream().map(BookResponseDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookResponseDto> findAllByPatron(String patronName) {
-        List<Book> books = bookRepository.findAllByPatronName(patronName);
+    public List<BookResponseDto> findAllByPatron(String patronName, PageRequest pageRequest) {
+        List<Book> books = bookRepository.findAllByPatronName(patronName, pageRequest);
+        return books.stream().map(BookResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookResponseDto> findAllByTitleAndAuthor(String keyword, String authorName, PageRequest pageRequest) {
+        List<Book> books = bookRepository.findAllByTitleAndAuthor(keyword, authorName, pageRequest);
+        return books.stream().map(BookResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookResponseDto> findAllByTitleAndPatron(String keyword, String patronName, PageRequest pageRequest) {
+        List<Book> books = bookRepository.findAllByTitleAndPatron(keyword, patronName, pageRequest);
+        return books.stream().map(BookResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookResponseDto> findAllByAuthorAndPatron(String authorName, String patronName, PageRequest pageRequest) {
+        List<Book> books = bookRepository.findAllByAuthorAndPatron(authorName, patronName, pageRequest);
+        return books.stream().map(BookResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookResponseDto> findAllByAll(String keyword, String authorName, String patronName, PageRequest pageRequest) {
+        List<Book> books = bookRepository.findAllByTitleAndAuthorAndPatron(keyword, authorName, patronName, pageRequest);
         return books.stream().map(BookResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -108,4 +138,17 @@ public class BookServiceImpl implements BookService {
         );
     }
 
+    @Override
+    public PageRequest setPageRequest(String request, String type) {
+        if (request == null || request.isBlank()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "`page`(param) must be acs or desc");
+        }
+        request = request.toLowerCase();
+
+        if (request.equals("acs")) {
+            return PageRequest.of(0, 10, Sort.by(type).ascending());
+        }
+
+        return PageRequest.of(0, 10,Sort.by(type).descending());
+    }
 }
