@@ -1,4 +1,4 @@
-package com.example.aop_study.response.service;
+package com.example.aop_study.global.response.service;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,10 @@ public class ResponseService {
 
     public <T> ResponseEntity<T> getResponse(T data, HttpStatus httpStatus) {
         return new ResponseEntity<>(data, httpStatus);
+    }
+
+    public ResponseEntity<?> getCommonResponse(HttpStatus httpStatus) {
+        return new ResponseEntity<>(httpStatus);
     }
 
     public ResponseEntity<String> getResponseWithHeader(String data, String headerKey, String headerValue, HttpStatus httpStatus) {

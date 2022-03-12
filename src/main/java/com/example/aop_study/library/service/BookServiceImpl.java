@@ -164,4 +164,17 @@ public class BookServiceImpl implements BookService {
         return PageRequest.of(0, 10, Sort.by(type).descending());
     }
 
+    @Override
+    public void deleteBook(Long id) {
+        Book book = findById(id);
+        
+        if (book.isLoaned()) {
+            throw new HttpClientErrorException(HttpStatus.CONFLICT, "대출 상태인 도서는 삭제할 수 없습니다.");
+        }
+        if (!book.isDamaged()) {
+            throw new HttpClientErrorException(HttpStatus.CONFLICT, "이상 없는 도서를 삭제할 수 없습니다.");
+        }
+
+        bookRepository.delete(book);
+    }
 }

@@ -1,10 +1,10 @@
 package com.example.aop_study.library.controller;
 
-import com.example.aop_study.library.dto.BookLoanReturnDto;
+import com.example.aop_study.library.dto.BookIdDto;
 import com.example.aop_study.library.dto.BookRequestDto;
 import com.example.aop_study.library.dto.BookResponseDto;
 import com.example.aop_study.library.service.BookServiceImpl;
-import com.example.aop_study.response.service.ResponseService;
+import com.example.aop_study.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -64,22 +64,22 @@ public class BookController {
 
     // 대출
     @PatchMapping("loan")
-    public ResponseEntity<BookResponseDto> loanByTitle(@RequestBody BookLoanReturnDto bookLoanReturnDto) {
-        if (bookLoanReturnDto.getId() == null) {
+    public ResponseEntity<BookResponseDto> loanByTitle(@RequestBody BookIdDto bookIdDto) {
+        if (bookIdDto.getId() == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "`id`(body) must be Number");
         }
 
-        return responseService.getResponse(bookService.loanBook(bookLoanReturnDto.getId()), HttpStatus.CREATED);
+        return responseService.getResponse(bookService.loanBook(bookIdDto.getId()), HttpStatus.CREATED);
     }
 
     // 반납
     @PatchMapping("return")
-    public ResponseEntity<BookResponseDto> returnByTitle(@RequestBody BookLoanReturnDto bookLoanReturnDto) {
-        if (bookLoanReturnDto.getId() == null) {
+    public ResponseEntity<BookResponseDto> returnByTitle(@RequestBody BookIdDto bookIdDto) {
+        if (bookIdDto.getId() == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "`id`(body) must be Number");
         }
 
-        return responseService.getResponse(bookService.returnBook(bookLoanReturnDto.getId()), HttpStatus.CREATED);
+        return responseService.getResponse(bookService.returnBook(bookIdDto.getId()), HttpStatus.CREATED);
     }
 
 }

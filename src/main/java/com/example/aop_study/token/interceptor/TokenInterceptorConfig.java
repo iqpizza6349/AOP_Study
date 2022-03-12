@@ -18,7 +18,7 @@ public class TokenInterceptorConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/openapi/**")
                 .addPathPatterns("/api/managers/**")
                 .excludePathPatterns("/api/books/**")
-                .order(0);
+                .excludePathPatterns("/api/token/**");
     }
 
 }

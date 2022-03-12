@@ -1,4 +1,4 @@
-package com.example.aop_study.exception;
+package com.example.aop_study.global.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;

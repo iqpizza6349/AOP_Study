@@ -26,7 +26,7 @@ public class TokenProvider {
         SECRET_KEY = Base64UrlCodec.BASE64URL.encode(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
-    public TokenDto createToken(Long managerId) {
+    public TokenDto createToken(String managerId) {
         Claims claims = Jwts.claims();
         claims.put("manager", managerId);
 

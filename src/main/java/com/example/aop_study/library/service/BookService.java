@@ -30,5 +30,7 @@ public interface BookService {
 
     PageRequest setPageRequest(String request, String type);
 
+    void deleteBook(Long id);
+
 
 }

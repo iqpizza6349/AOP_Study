@@ -1,4 +1,4 @@
-package com.example.aop_study.response.dto;
+package com.example.aop_study.global.response.dto;
 
 import lombok.Builder;
 import lombok.Getter;
