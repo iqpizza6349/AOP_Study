@@ -26,7 +26,7 @@ public class BookServiceImpl implements BookService {
     private final PatronServiceImpl patronService;
 
     @Override
-    public BookResponseDto register(String token, BookRequestDto bookRequestDto) {
+    public BookResponseDto registerBook(String token, BookRequestDto bookRequestDto) {
         String title = bookRequestDto.getTitle();
         String author = bookRequestDto.getAuthor();
 
@@ -116,18 +116,30 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean isLoaned(Long id) {
-        return findById(id).isLoaned();
+    public BookResponseDto loanBook(Long id) {
+        Book book = findById(id);
+        if (book.isLoaned()) {
+             // 이미 대출되었다면
+            throw new HttpClientErrorException(HttpStatus.CONFLICT, "이미 대출된 도서입니다.");
+        }
+        if (book.isDamaged()) {
+            throw new HttpClientErrorException(HttpStatus.CONFLICT, "파손된 도서는 대출할 수 없습니다.");
+        }
+
+        book.updateLoaned(true);
+        return new BookResponseDto(book);
     }
 
     @Override
-    public boolean isDamaged(Long id) {
-        return findById(id).isDamaged();
-    }
+    public BookResponseDto returnBook(Long id) {
+        Book book = findById(id);
+        if (!book.isLoaned()) {
+            // 이미 대출되었다면
+            throw new HttpClientErrorException(HttpStatus.CONFLICT, "대출되지않은 도서입니다.");
+        }
 
-    @Override
-    public boolean loan(BookRequestDto bookRequestDto) {
-        return false;
+        book.updateLoaned(false);
+        return new BookResponseDto(book);
     }
 
     @Transactional(readOnly = true)
@@ -149,6 +161,7 @@ public class BookServiceImpl implements BookService {
             return PageRequest.of(0, 10, Sort.by(type).ascending());
         }
 
-        return PageRequest.of(0, 10,Sort.by(type).descending());
+        return PageRequest.of(0, 10, Sort.by(type).descending());
     }
+
 }

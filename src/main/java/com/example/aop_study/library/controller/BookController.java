@@ -1,5 +1,6 @@
 package com.example.aop_study.library.controller;
 
+import com.example.aop_study.library.dto.BookLoanReturnDto;
 import com.example.aop_study.library.dto.BookRequestDto;
 import com.example.aop_study.library.dto.BookResponseDto;
 import com.example.aop_study.library.service.BookServiceImpl;
@@ -23,7 +24,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<BookResponseDto> donateBook(@RequestBody BookRequestDto bookRequestDto) {
-        return responseService.getResponse(bookService.register(null, bookRequestDto), HttpStatus.CREATED);
+        return responseService.getResponse(bookService.registerBook(null, bookRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -57,8 +58,28 @@ public class BookController {
             return responseService.getResponse(bookService.findAllByPatron(patron, pageRequest));
         }
         else {
-            throw new HttpClientErrorException(HttpStatus.CONFLICT, "keyword, author, patron 중 한 가지는 충족되어야합니다.");
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "keyword, author, patron 중 한 가지는 충족되어야합니다.");
         }
+    }
+
+    // 대출
+    @PatchMapping("loan")
+    public ResponseEntity<BookResponseDto> loanByTitle(@RequestBody BookLoanReturnDto bookLoanReturnDto) {
+        if (bookLoanReturnDto.getId() == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "`id`(body) must be Number");
+        }
+
+        return responseService.getResponse(bookService.loanBook(bookLoanReturnDto.getId()), HttpStatus.CREATED);
+    }
+
+    // 반납
+    @PatchMapping("return")
+    public ResponseEntity<BookResponseDto> returnByTitle(@RequestBody BookLoanReturnDto bookLoanReturnDto) {
+        if (bookLoanReturnDto.getId() == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "`id`(body) must be Number");
+        }
+
+        return responseService.getResponse(bookService.returnBook(bookLoanReturnDto.getId()), HttpStatus.CREATED);
     }
 
 }

@@ -1,16 +1,14 @@
 package com.example.aop_study.library.service;
 
-import com.example.aop_study.library.domain.entity.Book;
 import com.example.aop_study.library.dto.BookRequestDto;
 import com.example.aop_study.library.dto.BookResponseDto;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
 public interface BookService {
 
-    BookResponseDto register(String token, BookRequestDto bookRequestDto);
+    BookResponseDto registerBook(String token, BookRequestDto bookRequestDto);
 
     List<BookResponseDto> findAllByTitle(String keyword, PageRequest pageRequest);
 
@@ -26,11 +24,11 @@ public interface BookService {
 
     List<BookResponseDto> findAllByAll(String keyword, String authorName, String patronName, PageRequest pageRequest);
 
-    boolean isLoaned(Long id);
+    BookResponseDto loanBook(Long id);
 
-    boolean isDamaged(Long id);
-
-    boolean loan(BookRequestDto bookRequestDto);
+    BookResponseDto returnBook(Long id);
 
     PageRequest setPageRequest(String request, String type);
+
+
 }
