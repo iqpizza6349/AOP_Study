@@ -1,5 +1,6 @@
 package com.example.aop_study.library.service;
 
+import com.example.aop_study.library.domain.entity.Book;
 import com.example.aop_study.library.dto.BookRequestDto;
 import com.example.aop_study.library.dto.BookResponseDto;
 

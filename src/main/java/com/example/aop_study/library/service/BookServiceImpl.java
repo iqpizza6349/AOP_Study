@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class BookServiceImpl implements BookService {
         }
 
         if ((bookRequestDto.getPatron() == null || bookRequestDto.getPatron().isBlank())
-                && token.isBlank()) {
+                && (token == null || token.isBlank())) {
             // 후원자도 없고, 관리자 권한 역시 없다면 403
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "책을 등록할 수 있는 권한이 없습니다.");
         }
@@ -61,33 +62,50 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookResponseDto> findAllByTitle(String keyword) {
-        return null;
+        List<Book> books = bookRepository.findAllByTitleContains(keyword);
+        return books.stream().map(BookResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookResponseDto> findAllByAuthor(String authorName) {
-        return null;
+        List<Book> books = bookRepository.findAllByAuthor(authorName);
+        return books.stream().map(BookResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookResponseDto> findAllByPatron(String patronName) {
-        return null;
+        List<Book> books = bookRepository.findAllByPatronName(patronName);
+        return books.stream().map(BookResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean isLoaned(Long id) {
-        return false;
+        return findById(id).isLoaned();
     }
 
     @Override
     public boolean isDamaged(Long id) {
-        return false;
+        return findById(id).isDamaged();
     }
 
     @Override
     public boolean loan(BookRequestDto bookRequestDto) {
         return false;
+    }
+
+    @Transactional(readOnly = true)
+    Book findById(Long id) {
+        return bookRepository.findById(id)
+            .orElseThrow(
+                    () -> new HttpClientErrorException(HttpStatus.NOT_FOUND)
+        );
     }
 
 }

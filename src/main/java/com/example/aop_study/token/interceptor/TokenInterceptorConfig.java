@@ -16,7 +16,9 @@ public class TokenInterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(tokenInterceptor)
                 .excludePathPatterns("/api/error")
                 .excludePathPatterns("/openapi/**")
-                .addPathPatterns("/api/member/**");
+                .addPathPatterns("/api/book/**")
+                .excludePathPatterns("/api/books/**")
+                .order(0);
     }
 
 }
