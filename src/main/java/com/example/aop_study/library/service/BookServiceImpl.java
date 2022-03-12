@@ -40,7 +40,7 @@ public class BookServiceImpl implements BookService {
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "책을 등록할 수 있는 권한이 없습니다.");
         }
 
-        boolean isDonated = !bookRequestDto.getPatron().isBlank();
+        boolean isDonated = !(bookRequestDto.getPatron() == null);
 
         if (!isDonated && !tokenProvider.checkManager(token)) {
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "책을 등록할 수 있는 권한이 없습니다.");

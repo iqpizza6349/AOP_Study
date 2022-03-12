@@ -35,7 +35,7 @@ public class BookController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String patron,
-            @RequestParam String page
+            @RequestParam(defaultValue = "acs") String page
     ) {
         PageRequest pageRequest = bookService.setPageRequest(page, "title");
 
