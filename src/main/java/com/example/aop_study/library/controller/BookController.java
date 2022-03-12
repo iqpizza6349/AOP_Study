@@ -1,5 +1,6 @@
 package com.example.aop_study.library.controller;
 
+import com.example.aop_study.global.aop.annotation.ExecTimer;
 import com.example.aop_study.library.dto.BookIdDto;
 import com.example.aop_study.library.dto.BookRequestDto;
 import com.example.aop_study.library.dto.BookResponseDto;
@@ -22,11 +23,13 @@ public class BookController {
     private final BookServiceImpl bookService;
     private final ResponseService responseService;
 
+    @ExecTimer
     @PostMapping
     public ResponseEntity<BookResponseDto> donateBook(@RequestBody BookRequestDto bookRequestDto) {
         return responseService.getResponse(bookService.registerBook(null, bookRequestDto), HttpStatus.CREATED);
     }
 
+    @ExecTimer
     @GetMapping
     public ResponseEntity<List<BookResponseDto>> searchByKeyword(
             @RequestParam(required = false) String keyword,
@@ -63,6 +66,7 @@ public class BookController {
     }
 
     // 대출
+    @ExecTimer
     @PatchMapping("loan")
     public ResponseEntity<BookResponseDto> loanByTitle(@RequestBody BookIdDto bookIdDto) {
         if (bookIdDto.getId() == null) {
@@ -73,6 +77,7 @@ public class BookController {
     }
 
     // 반납
+    @ExecTimer
     @PatchMapping("return")
     public ResponseEntity<BookResponseDto> returnByTitle(@RequestBody BookIdDto bookIdDto) {
         if (bookIdDto.getId() == null) {

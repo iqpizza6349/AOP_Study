@@ -1,4 +1,4 @@
-package com.example.aop_study.library.controller;
+package com.example.aop_study.token.controller;
 
 import com.example.aop_study.global.response.service.ResponseService;
 import com.example.aop_study.library.service.ManagerServiceImpl;
