@@ -64,14 +64,14 @@ public class ManagerController {
 
     // 후원자 삭제
     @DeleteMapping("/patron")
-    public ResponseEntity<PatronDto> deletePatron(
+    public ResponseEntity<?> deletePatron(
             @RequestHeader(name = "X-AUTH-TOKEN") String token,
             @RequestBody PatronDto patronDto) {
         if (!managerService.checkToken(token)) {
             throw new HttpClientErrorException(HttpStatus.CONFLICT, "관리자 정보가 없는 토큰입니다.");
         }
-
-        return responseService.getResponse(patronService.registerPatron(patronDto.getName()), HttpStatus.CREATED);
+        patronService.deletePatron(patronDto.getName());
+        return responseService.getCommonResponse(HttpStatus.NO_CONTENT);
     }
 
 }
