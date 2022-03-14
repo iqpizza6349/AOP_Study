@@ -4,8 +4,7 @@ import com.example.aop_study.library.domain.entity.Patron;
 import com.example.aop_study.library.domain.repository.PatronRepository;
 import com.example.aop_study.library.dto.BookRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class BookControllerTest {
@@ -31,7 +32,7 @@ public class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
+    @BeforeAll
     void before() {
         Patron patron = Patron.builder()
                 .name("워크샵6349")
@@ -40,7 +41,6 @@ public class BookControllerTest {
     }
 
     @Test
-    @Rollback()
     public void 도서_기부_성공() throws Exception {
         String title = "도서 제목";
         String author = "작가";
